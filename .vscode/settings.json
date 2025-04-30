@@ -1,0 +1,15 @@
+{
+    "files.exclude": {
+        "**/bin": true,
+        "**/obj": true,
+        "**/.gitignore": true,
+        "**/LICENSE": true,
+        "**/README*": true,
+        "**/*sln*": true,
+        "**/*csproj*": true,
+    },
+    "search.exclude": {
+        "**/bin": true,
+        "**/obj": true
+    }
+}
