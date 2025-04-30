@@ -11,5 +11,8 @@
     "search.exclude": {
         "**/bin": true,
         "**/obj": true
-    }
+    },
+    "cSpell.words": [
+        "ASPNETCORE"
+    ]
 }
