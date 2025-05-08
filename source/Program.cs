@@ -1,6 +1,4 @@
-using System.IO.Compression;
-using System.Text.Json;
-using Persistence.DataModel;
+using Persistence.Services;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 // Register CORS
@@ -19,29 +17,26 @@ var app = builder.Build();
 // Enable CORS globally
 app.UseCors();
 
-app.MapGet("/", () => "Hello World!");
+PersistentStorage persistence = new();
+RequestHandler handler = new(persistence);
 
-app.MapPost("/save", static async (HttpContext http) =>
+app.MapGet("/get", async (string id) =>
 {
-    using var gzipStream = new GZipStream(http.Request.Body, CompressionMode.Decompress);
+    Stream? stream = await handler.Get(id);
 
-    var options = new JsonSerializerOptions
-    {
-        PropertyNameCaseInsensitive = true // Enable case-insensitive matching
-    };
+    stream!.Position = 0; // rewind stream
 
-    CrosslyDataModel? dataModel = await JsonSerializer.DeserializeAsync<CrosslyDataModel>(gzipStream, options);
+    return stream is null
+        ? Results.NotFound()
+        : Results.File(stream, contentType: "application/octet-stream", fileDownloadName: null);
+});
 
-    if (dataModel is null)
-    {
-        return Results.BadRequest("Invalid Data Model");
-    }
-    else
-    {
-        Console.WriteLine($"Saving pattern for Name: {dataModel.Name}");
+app.MapPost("/save", async (HttpContext http) =>
+{
+    Stream body = http.Request.Body;
+    string id = await handler.Save(body);
 
-        return Results.Ok(new { success = true });
-    }
+    return Results.Ok(new { id });
 });
 
 app.Run();
