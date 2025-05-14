@@ -7,7 +7,7 @@ namespace Persistence.Service
         private readonly WebApplication webApp = webApp;
         private readonly IRepository repository = repository;
 
-        public void Start()
+        public void Run()
         {
             webApp.MapGet("/get", GetDataModel);
 

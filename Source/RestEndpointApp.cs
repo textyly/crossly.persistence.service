@@ -20,7 +20,7 @@ namespace Persistence
 
         public void Run()
         {
-            service.Start();
+            service.Run();
         }
     }
 }
