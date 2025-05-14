@@ -21,12 +21,11 @@ namespace Persistence.Persistence
 
         public Task<string> Save(CrosslyDataModel dataModel)
         {
-            int id = Interlocked.Increment(ref nextId);
+            string? dmId = database.FirstOrDefault((dm) => dm.Value.Name == dataModel.Name).Key;
+            string id = dmId ?? Interlocked.Increment(ref nextId).ToString();
+            database.AddOrUpdate(id, key => dataModel, (key, oldValue) => dataModel); // just replace if exists
 
-            string strId = id.ToString();
-            database.AddOrUpdate(strId, key => dataModel, (key, oldValue) => dataModel); // just replace if exists
-
-            return Task.FromResult(strId);
+            return Task.FromResult(id);
         }
     }
 }
