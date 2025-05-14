@@ -1,14 +1,14 @@
 using Persistence.DataModel;
 using System.Collections.Concurrent;
 
-namespace Persistence.Services
+namespace Persistence.Persistence
 {
-    public class PersistentStorage : IPersistence
+    public class MongoDbPersistence : IPersistence
     {
         private volatile int nextId = -1;
         private readonly ConcurrentDictionary<string, CrosslyDataModel> database;
 
-        public PersistentStorage()
+        public MongoDbPersistence()
         {
             database = new();
         }

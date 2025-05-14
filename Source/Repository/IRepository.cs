@@ -1,6 +1,6 @@
-namespace Persistence.Services
+namespace Persistence.Repository
 {
-    public interface IRequestHandler
+    public interface IRepository
     {
         Task<string> Save(Stream dataModelStream);
         Task<Stream?> Get(string id);
