@@ -26,12 +26,15 @@ namespace Persistence.Service
         private async Task<IResult> GetDataModel(string id)
         {
             Stream? stream = await repository.Get(id);
-
-            stream!.Position = 0; // rewind stream
-
-            return stream is null
-                ? Results.NotFound()
-                : Results.File(stream, contentType: "application/octet-stream", fileDownloadName: null);
+            if (stream is null)
+            {
+                return Results.NotFound();
+            }
+            else
+            {
+                stream!.Position = 0;
+                return Results.File(stream, contentType: "application/octet-stream", fileDownloadName: null);
+            }
         }
     }
 }

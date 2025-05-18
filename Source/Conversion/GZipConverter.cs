@@ -11,7 +11,7 @@ namespace Persistence.Conversion
 
         public GZipConverter()
         {
-            serializerOptions = new() { PropertyNameCaseInsensitive = true };
+            serializerOptions = JsonSerializerOptions.Web;
         }
 
         public async Task<CrosslyDataModel?> TryConvertToDataModel(Stream dataModelStream)
@@ -25,7 +25,7 @@ namespace Persistence.Conversion
 
         public async Task<Stream> ConvertToStream(CrosslyDataModel dataModel)
         {
-            string jsonDataModel = JsonSerializer.Serialize(dataModel);
+            string jsonDataModel = JsonSerializer.Serialize(dataModel, serializerOptions);
 
             // TODO: check for any kind of leaks
             MemoryStream memoryStream = new();
