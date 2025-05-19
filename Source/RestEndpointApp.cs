@@ -5,21 +5,20 @@ using Persistence.Persistence;
 
 namespace Persistence
 {
-    public class RestEndpointApp
+    public class RestEndpointApp(WebApplication webApp)
     {
-        private readonly RestEndpointService service;
+        private readonly WebApplication webApp = webApp;
+        private RestEndpointService service;
 
-        public RestEndpointApp(WebApplication webApp)
-        {
-            GZipConverter converter = new();
+        public async Task Run()
+        {   
             MongoDbPersistence persistence = new();
+            await persistence.Start();
+
+            GZipConverter converter = new();
             DataModelRepository repository = new(persistence, converter);
 
             service = new RestEndpointService(webApp, repository);
-        }
-
-        public void Run()
-        {
             service.Run();
         }
     }

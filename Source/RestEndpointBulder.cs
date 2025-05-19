@@ -19,4 +19,4 @@ var webbApp = builder.Build();
 webbApp.UseCors();
 
 RestEndpointApp restEndpointApp = new(webbApp);
-restEndpointApp.Run();
+await restEndpointApp.Run();

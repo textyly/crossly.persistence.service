@@ -4,6 +4,9 @@ namespace Persistence.Persistence
 {
     public interface IPersistence
     {
+
+        Task Start();
+
         /// <summary>
         /// TBD 
         /// </summary>
