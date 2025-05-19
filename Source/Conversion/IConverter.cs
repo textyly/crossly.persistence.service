@@ -1,10 +1,11 @@
 using Persistence.DataModel;
+using Persistence.Persistence.BsonDataModel;
 
 namespace Persistence.Conversion
 {
     public interface IConverter
     {
-        Task<CrosslyDataModel?> TryConvertToDataModel(Stream dataModelStream);
-        Task<Stream> ConvertToStream(CrosslyDataModel dataModel);
+        BsonCrosslyDataModel Convert(CrosslyDataModel dataModel);
+        CrosslyDataModel Convert(BsonCrosslyDataModel dataModel);
     }
 }

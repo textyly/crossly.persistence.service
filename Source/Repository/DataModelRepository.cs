@@ -1,13 +1,13 @@
 using Persistence.DataModel;
-using Persistence.Conversion;
 using Persistence.Persistence;
+using Persistence.Compression;
 
 namespace Persistence.Repository
 {
-    public class DataModelRepository(IPersistence persistence, IConverter converter) : IRepository
+    public class DataModelsRepository(IPersistence persistence, ICompressor compressor) : IRepository
     {
         private readonly IPersistence persistence = persistence;
-        private readonly IConverter converter = converter;
+        private readonly ICompressor compressor = compressor;
 
         public async Task<Stream?> Get(string id)
         {
@@ -15,12 +15,12 @@ namespace Persistence.Repository
 
             return dataModel is null
                 ? null
-                : await converter.ConvertToStream(dataModel);
+                : await compressor.CompressToStream(dataModel);
         }
 
         public async Task<string> Save(Stream dataModelStream)
         {
-            CrosslyDataModel? dataModel = await converter.TryConvertToDataModel(dataModelStream);
+            CrosslyDataModel? dataModel = await compressor.TryDecompressToDataModel(dataModelStream);
 
             return dataModel is null
                 ? throw new InvalidDataException()

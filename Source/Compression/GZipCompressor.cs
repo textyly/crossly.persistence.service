@@ -2,19 +2,20 @@ using System.Text;
 using System.Text.Json;
 using System.IO.Compression;
 using Persistence.DataModel;
+using Persistence.Compression;
 
 namespace Persistence.Conversion
 {
-    public class GZipConverter : IConverter
+    public class GZipCompressor : ICompressor
     {
         private readonly JsonSerializerOptions serializerOptions;
 
-        public GZipConverter()
+        public GZipCompressor()
         {
             serializerOptions = JsonSerializerOptions.Web;
         }
 
-        public async Task<CrosslyDataModel?> TryConvertToDataModel(Stream dataModelStream)
+        public async Task<CrosslyDataModel?> TryDecompressToDataModel(Stream dataModelStream)
         {
             using var gzipStream = new GZipStream(dataModelStream, CompressionMode.Decompress);
 
@@ -23,7 +24,7 @@ namespace Persistence.Conversion
             return dataModel;
         }
 
-        public async Task<Stream> ConvertToStream(CrosslyDataModel dataModel)
+        public async Task<Stream> CompressToStream(CrosslyDataModel dataModel)
         {
             string jsonDataModel = JsonSerializer.Serialize(dataModel, serializerOptions);
 

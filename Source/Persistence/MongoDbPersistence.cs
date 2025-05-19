@@ -1,30 +1,24 @@
-using MongoDB.Bson;
 using MongoDB.Driver;
+using Persistence.Conversion;
 using Persistence.DataModel;
 using Persistence.Persistence.BsonDataModel;
 
 namespace Persistence.Persistence
 {
-    public class MongoDbPersistence : IPersistence
+    public class MongoDbPersistence(IConverter converter) : IPersistence
     {
-        private readonly string dbName;
-        private readonly string collectionName;
-        private readonly string connectionString;
+        private readonly IConverter converter = converter;
+        private readonly string dbName = "CrosslyDb";
+        private readonly string collectionName = "DataModels";
+        private readonly string connectionString = "mongodb://localhost:27017";
 
-        private IMongoCollection<BsonCrosslyDataModel>? patternsCollection;
-
-        public MongoDbPersistence()
-        {
-            dbName = "CrosslyDb";
-            collectionName = "Patterns";
-            connectionString = "mongodb://localhost:27017";
-        }
+        private IMongoCollection<BsonCrosslyDataModel>? dataModelsCollection;
 
         public async Task Start()
         {
             MongoClient client = new(connectionString);
             IMongoDatabase database = client.GetDatabase(dbName);
-            patternsCollection = database.GetCollection<BsonCrosslyDataModel>(collectionName);
+            dataModelsCollection = database.GetCollection<BsonCrosslyDataModel>(collectionName);
 
             IndexKeysDefinition<BsonCrosslyDataModel> indexKeys =
                 Builders<BsonCrosslyDataModel>.IndexKeys.Ascending(p => p.Name);
@@ -32,27 +26,23 @@ namespace Persistence.Persistence
             CreateIndexOptions indexOptions = new() { Unique = true };
             CreateIndexModel<BsonCrosslyDataModel> indexModel = new(indexKeys, indexOptions);
 
-            await patternsCollection.Indexes.CreateOneAsync(indexModel);
+            await dataModelsCollection.Indexes.CreateOneAsync(indexModel);
         }
 
         public async Task<CrosslyDataModel?> Get(string id)
         {
-            if (!ObjectId.TryParse(id, out ObjectId objectId))
-            {
-                throw new ArgumentException("Invalid pattern ID format.");
-            }
-            else
-            {
-                BsonCrosslyDataModel? pattern = await patternsCollection.Find(p => p.Id == id).FirstOrDefaultAsync();
-                CrosslyDataModel? dataModel = null; // TODO: implement
-                return dataModel;
-            }
+            BsonCrosslyDataModel? bsonDataModel = await dataModelsCollection
+                                                            .Find(p => p.Id == id)
+                                                            .FirstOrDefaultAsync();
+
+            CrosslyDataModel? dataModel = converter.Convert(bsonDataModel);
+            return dataModel;
         }
 
         public async Task<string> Save(CrosslyDataModel dataModel)
         {
-            BsonCrosslyDataModel bsonDataModel = null!; // TODO: implement
-            await patternsCollection!.InsertOneAsync(bsonDataModel);
+            BsonCrosslyDataModel bsonDataModel = converter.Convert(dataModel);
+            await dataModelsCollection!.InsertOneAsync(bsonDataModel);
 
             string id = bsonDataModel.Id!;
             return id;

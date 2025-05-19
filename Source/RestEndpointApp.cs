@@ -8,18 +8,31 @@ namespace Persistence
     public class RestEndpointApp(WebApplication webApp)
     {
         private readonly WebApplication webApp = webApp;
-        private RestEndpointService service;
 
         public async Task Run()
-        {   
-            MongoDbPersistence persistence = new();
-            await persistence.Start();
+        {
+            IPersistence persistence = await CreatePersistence();
+            IRepository repository = CreateRepository(persistence);
 
-            GZipConverter converter = new();
-            DataModelRepository repository = new(persistence, converter);
-
-            service = new RestEndpointService(webApp, repository);
+            RestEndpointService service = new(webApp, repository);
             service.Run();
+        }
+
+        private async Task<IPersistence> CreatePersistence()
+        {
+            Converter converter = new();
+            MongoDbPersistence persistence = new(converter);
+
+            await persistence.Start();
+            return persistence;
+        }
+
+        private IRepository CreateRepository(IPersistence persistence)
+        {
+            GZipCompressor compressor = new();
+            DataModelsRepository repository = new(persistence, compressor);
+
+            return repository;
         }
     }
 }

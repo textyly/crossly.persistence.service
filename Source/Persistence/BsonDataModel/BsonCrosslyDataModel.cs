@@ -19,7 +19,7 @@ namespace Persistence.Persistence.BsonDataModel
         public List<BsonThreadDataModel> Threads { get; set; } = [];
 
         [BsonElement("pattern")]
-        public List<BsonPatternDataModel> Pattern { get; set; } = [];
+        public List<BsonThreadPathDataModel> Pattern { get; set; } = [];
     }
 
     public class BsonFabricDataModel
@@ -67,7 +67,7 @@ namespace Persistence.Persistence.BsonDataModel
         public int Width { get; set; }
     }
 
-    public class BsonPatternDataModel
+    public class BsonThreadPathDataModel
     {
         [BsonElement("threadIndex")]
         public int ThreadIndex { get; set; }
