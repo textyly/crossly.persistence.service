@@ -2,6 +2,14 @@ using Persistence.Repository;
 
 namespace Persistence.Service
 {
+    // TODO: 1) this service will sit in front of a database 
+    // and will not be reached directly from the UI. 
+    // Probably it will be invoked by another service which is going to provide 
+    // validated and well formatted data models 
+
+    // TODO: 2) start using grpc instead of rest since an internal communication
+    // between services will take place
+
     public class RestEndpointService(WebApplication webApp, IRepository repository)
     {
         private readonly WebApplication webApp = webApp;

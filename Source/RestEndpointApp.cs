@@ -2,6 +2,7 @@ using Persistence.Service;
 using Persistence.Repository;
 using Persistence.Conversion;
 using Persistence.Persistence;
+using Persistence.Compression;
 
 namespace Persistence
 {

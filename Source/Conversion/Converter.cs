@@ -6,6 +6,8 @@ using Persistence.Persistence.BsonDataModel;
 
 namespace Persistence.Conversion
 {
+    // TODO: indexesX and indexesY (pattern) will come in validated gzip format and conversion will not be needed for them
+    // they will be saved into the database as they are, in gzip format in order to save space and CPU
     public class Converter : IConverter
     {
         public BsonCrosslyDataModel Convert(CrosslyDataModel dataModel)

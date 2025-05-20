@@ -2,10 +2,11 @@ using System.Text;
 using System.Text.Json;
 using System.IO.Compression;
 using Persistence.DataModel;
-using Persistence.Compression;
 
-namespace Persistence.Conversion
+namespace Persistence.Compression
 {
+    // TODO: indexesX and indexesY (pattern) will come in validated gzip format and compression will not be needed for them
+    // they will be saved into the database as they are, in gzip format in order to save space and CPU
     public class GZipCompressor : ICompressor
     {
         private readonly JsonSerializerOptions serializerOptions;
@@ -39,4 +40,4 @@ namespace Persistence.Conversion
             return memoryStream;
         }
     }
-} 
+}
