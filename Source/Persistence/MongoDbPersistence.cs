@@ -72,5 +72,16 @@ namespace Persistence.Persistence
             string id = bsonDataModel.Id!;
             return id;
         }
+
+        public async Task<bool> Replace(string id, CrosslyDataModel newDataModel)
+        {
+            BsonCrosslyDataModel replacementDataModel = converter.Convert(newDataModel);
+            replacementDataModel.Id = id;
+
+            ReplaceOneResult result = await dataModelsCollection.ReplaceOneAsync(p => p.Id == id && p.Name == newDataModel.Name, replacementDataModel);
+
+            bool success = result.IsAcknowledged && result.ModifiedCount == 1;
+            return success;
+        }
     }
 }

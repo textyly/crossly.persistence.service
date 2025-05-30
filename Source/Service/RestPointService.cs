@@ -30,6 +30,15 @@ namespace Persistence.Service
                 return Results.Ok(new { id });
             });
 
+            webApp.MapPut("/replace", async (string id, HttpContext httpContext) =>
+            {
+                Stream body = httpContext.Request.Body;
+                bool success = await repository.Replace(id, body);
+
+                return Results.Ok(new { success });
+            });
+
+
             webApp.Run();
         }
 

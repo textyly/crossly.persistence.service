@@ -8,13 +8,6 @@ namespace Persistence.Persistence
         Task Start();
 
         /// <summary>
-        /// TBD 
-        /// </summary>
-        /// <param name="dataModel">TBD</param>
-        /// <returns>id of the persisted data model</returns>
-        Task<string> Save(CrosslyDataModel dataModel);
-
-        /// <summary>
         /// TBD
         /// </summary>
         /// <returns></returns>
@@ -33,5 +26,20 @@ namespace Persistence.Persistence
         /// <param name="name"></param>
         /// <returns></returns>
         Task<CrosslyDataModel?> GetByName(string name);
+
+        /// <summary>
+        /// TBD 
+        /// </summary>
+        /// <param name="dataModel">TBD</param>
+        /// <returns>id of the persisted data model</returns>
+        Task<string> Save(CrosslyDataModel dataModel);
+
+        /// <summary>
+        /// TBD
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="newDataModel"></param>
+        /// <returns></returns>
+        Task<bool> Replace(string id, CrosslyDataModel newDataModel);
     }
 }

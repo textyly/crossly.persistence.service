@@ -40,5 +40,15 @@ namespace Persistence.Repository
                 ? throw new InvalidDataException()
                 : await persistence.Save(dataModel);
         }
+
+        public async Task<bool> Replace(string id, Stream replacementDataModelStream)
+        {
+            CrosslyDataModel? replacementDataModel = await compressor.TryDecompressToDataModel(replacementDataModelStream);
+
+            return replacementDataModel is null
+                ? throw new InvalidDataException()
+                : await persistence.Replace(id, replacementDataModel);
+        }
+
     }
 }
