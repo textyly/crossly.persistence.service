@@ -19,6 +19,7 @@ namespace Persistence.Service
         {
             webApp.MapGet("/get/by-id", GetByIdDataModel);
             webApp.MapGet("/get/by-name", GetByNameDataModel);
+            webApp.MapGet("/get/all", GetAll);
 
             // TODO: check how to use a method, not a lambda
             webApp.MapPost("/save", async (HttpContext httpContext) =>
@@ -58,6 +59,12 @@ namespace Persistence.Service
                 stream!.Position = 0;
                 return Results.File(stream, contentType: "application/octet-stream", fileDownloadName: null);
             }
+        }
+
+        private async Task<IResult> GetAll()
+        {
+            string[] ids = await repository.GetAll();
+            return Results.Ok(new { ids });
         }
     }
 }

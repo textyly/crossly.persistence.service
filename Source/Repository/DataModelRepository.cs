@@ -9,6 +9,11 @@ namespace Persistence.Repository
         private readonly IPersistence persistence = persistence;
         private readonly ICompressor compressor = compressor;
 
+        public async Task<string[]> GetAll()
+        {
+            return await persistence.GetAll();
+        }
+
         public async Task<Stream?> GetById(string id)
         {
             CrosslyDataModel? dataModel = await persistence.GetById(id);

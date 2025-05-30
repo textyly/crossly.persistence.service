@@ -29,6 +29,17 @@ namespace Persistence.Persistence
             await dataModelsCollection.Indexes.CreateOneAsync(indexModel);
         }
 
+        public async Task<string[]> GetAll()
+        {
+            IEnumerable<BsonCrosslyDataModel> bsonDataModels = (await dataModelsCollection.FindAsync(Builders<BsonCrosslyDataModel>.Filter.Empty)).ToEnumerable();
+
+            string[] ids = [.. bsonDataModels
+                .Where(dataModel => dataModel.Id is not null)
+                .Select(dataModel => dataModel.Id!)];
+
+            return ids;
+        }
+
         public async Task<CrosslyDataModel?> GetById(string id)
         {
             BsonCrosslyDataModel? bsonDataModel = await dataModelsCollection
