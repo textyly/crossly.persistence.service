@@ -19,6 +19,13 @@ namespace Persistence.Persistence
         /// </summary>
         /// <param name="id">TBD</param>
         /// <returns>TBD</returns>
-        Task<CrosslyDataModel?> Get(string id);
+        Task<CrosslyDataModel?> GetById(string id);
+
+        /// <summary>
+        /// TBD
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        Task<CrosslyDataModel?> GetByName(string name);
     }
 }

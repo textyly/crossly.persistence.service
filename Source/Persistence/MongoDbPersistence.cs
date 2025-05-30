@@ -1,6 +1,6 @@
 using MongoDB.Driver;
-using Persistence.Conversion;
 using Persistence.DataModel;
+using Persistence.Conversion;
 using Persistence.Persistence.BsonDataModel;
 
 namespace Persistence.Persistence
@@ -29,10 +29,20 @@ namespace Persistence.Persistence
             await dataModelsCollection.Indexes.CreateOneAsync(indexModel);
         }
 
-        public async Task<CrosslyDataModel?> Get(string id)
+        public async Task<CrosslyDataModel?> GetById(string id)
         {
             BsonCrosslyDataModel? bsonDataModel = await dataModelsCollection
                                                             .Find(p => p.Id == id)
+                                                            .FirstOrDefaultAsync();
+
+            CrosslyDataModel? dataModel = converter.Convert(bsonDataModel);
+            return dataModel;
+        }
+
+        public async Task<CrosslyDataModel?> GetByName(string name)
+        {
+            BsonCrosslyDataModel? bsonDataModel = await dataModelsCollection
+                                                            .Find(p => p.Name == name)
                                                             .FirstOrDefaultAsync();
 
             CrosslyDataModel? dataModel = converter.Convert(bsonDataModel);
