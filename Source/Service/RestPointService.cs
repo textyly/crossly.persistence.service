@@ -17,7 +17,8 @@ namespace Persistence.Service
 
         public void Run()
         {
-            webApp.MapGet("/get", GetDataModel);
+            webApp.MapGet("/get/by-id", GetByIdDataModel);
+            webApp.MapGet("/get/by-name", GetByNameDataModel);
 
             // TODO: check how to use a method, not a lambda
             webApp.MapPost("/save", async (HttpContext httpContext) =>
@@ -31,9 +32,23 @@ namespace Persistence.Service
             webApp.Run();
         }
 
-        private async Task<IResult> GetDataModel(string id)
+        private async Task<IResult> GetByIdDataModel(string id)
         {
-            Stream? stream = await repository.Get(id);
+            Stream? stream = await repository.GetById(id);
+            if (stream is null)
+            {
+                return Results.NotFound();
+            }
+            else
+            {
+                stream!.Position = 0;
+                return Results.File(stream, contentType: "application/octet-stream", fileDownloadName: null);
+            }
+        }
+
+        private async Task<IResult> GetByNameDataModel(string name)
+        {
+            Stream? stream = await repository.GetByName(name);
             if (stream is null)
             {
                 return Results.NotFound();
