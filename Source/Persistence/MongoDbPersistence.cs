@@ -31,13 +31,17 @@ namespace Persistence.Persistence
 
         public async Task<string[]> GetAll()
         {
-            IEnumerable<BsonCrosslyDataModel> bsonDataModels = (await dataModelsCollection.FindAsync(Builders<BsonCrosslyDataModel>.Filter.Empty)).ToEnumerable();
+            IEnumerable<string?> ids = await dataModelsCollection
+                                        .Find(_ => true)
+                                        .Project(x => x.Id)
+                                        .ToListAsync();
 
-            string[] ids = [.. bsonDataModels
-                .Where(dataModel => dataModel.Id is not null)
-                .Select(dataModel => dataModel.Id!)];
+            string[] result = ids
+                                .Where(id => id is not null)
+                                .Select(id => id!)
+                                .ToArray();
 
-            return ids;
+            return result;
         }
 
         public async Task<CrosslyDataModel?> GetById(string id)
