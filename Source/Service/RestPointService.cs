@@ -17,21 +17,21 @@ namespace Persistence.Service
 
         public void Run()
         {
-            webApp.MapGet("/get/by-id", GetByIdDataModel);
-            webApp.MapGet("/get/by-name", GetByNameDataModel);
-            webApp.MapGet("/get/all", GetAll);
-            webApp.MapPatch("/rename", Rename);
+            webApp.MapGet("/api/patterns", GetAll);
+            webApp.MapGet("/api/patterns/{id}", GetById);
 
             // TODO: check how to use a method, not a lambda
-            webApp.MapPost("/save", async (HttpContext httpContext) =>
+            webApp.MapPost("/api/patterns", async (HttpContext httpContext) =>
             {
                 Stream body = httpContext.Request.Body;
-                string id = await repository.Save(body);
+                string id = await repository.Create(body);
 
                 return Results.Ok(new { id });
             });
 
-            webApp.MapPut("/replace", async (string id, HttpContext httpContext) =>
+            webApp.MapDelete("/api/patterns/{id}", Delete);
+
+            webApp.MapPut("/api/patterns/{id}", async (string id, HttpContext httpContext) =>
             {
                 Stream body = httpContext.Request.Body;
                 bool success = await repository.Replace(id, body);
@@ -39,27 +39,15 @@ namespace Persistence.Service
                 return Results.Ok(new { success });
             });
 
+            webApp.MapPatch("/api/patterns/{id}/rename", Rename);
+
 
             webApp.Run();
         }
 
-        private async Task<IResult> GetByIdDataModel(string id)
+        private async Task<IResult> GetById(string id)
         {
             Stream? stream = await repository.GetById(id);
-            if (stream is null)
-            {
-                return Results.NotFound();
-            }
-            else
-            {
-                stream!.Position = 0;
-                return Results.File(stream, contentType: "application/octet-stream", fileDownloadName: default);
-            }
-        }
-
-        private async Task<IResult> GetByNameDataModel(string name)
-        {
-            Stream? stream = await repository.GetByName(name);
             if (stream is null)
             {
                 return Results.NotFound();
@@ -77,10 +65,18 @@ namespace Persistence.Service
             return Results.Ok(new { ids });
         }
 
-        private async Task<IResult> Rename(string id, string newName)
+        private async Task<IResult> Rename(string id, RenamePatternRequest request)
         {
-            bool success = await repository.Rename(id, newName);
+            bool success = await repository.Rename(id, request.NewName);
             return Results.Ok(new { success });
         }
+
+        private async Task<IResult> Delete(string id)
+        {
+            // TODO:
+            return Results.NotFound();
+        }
     }
+
+    public record RenamePatternRequest(string NewName);
 }

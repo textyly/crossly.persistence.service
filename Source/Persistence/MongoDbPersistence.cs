@@ -53,17 +53,7 @@ namespace Persistence.Persistence
                 : converter.Convert(bsonDataModel);
         }
 
-        public async Task<CrosslyDataModel?> GetByName(string name)
-        {
-            var query = dataModelsCollection.Find(p => p.Name == name);
-            BsonCrosslyDataModel bsonDataModel = await query.FirstOrDefaultAsync();
-
-            return bsonDataModel is null
-                ? default
-                : converter.Convert(bsonDataModel);
-        }
-
-        public async Task<string> Save(CrosslyDataModel dataModel)
+        public async Task<string> Create(CrosslyDataModel dataModel)
         {
             BsonCrosslyDataModel bsonDataModel = converter.Convert(dataModel);
             await dataModelsCollection.InsertOneAsync(bsonDataModel);

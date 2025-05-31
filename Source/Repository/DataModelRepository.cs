@@ -22,23 +22,14 @@ namespace Persistence.Repository
                 ? default
                 : await compressor.CompressToStream(dataModel);
         }
-
-        public async Task<Stream?> GetByName(string name)
-        {
-            CrosslyDataModel? dataModel = await persistence.GetByName(name);
-
-            return dataModel is null
-                ? default
-                : await compressor.CompressToStream(dataModel);
-        }
-
-        public async Task<string> Save(Stream dataModelStream)
+        
+        public async Task<string> Create(Stream dataModelStream)
         {
             CrosslyDataModel? dataModel = await compressor.TryDecompressToDataModel(dataModelStream);
 
             return dataModel is null
                 ? throw new InvalidDataException()
-                : await persistence.Save(dataModel);
+                : await persistence.Create(dataModel);
         }
 
         public async Task<bool> Replace(string id, Stream replacementDataModelStream)
