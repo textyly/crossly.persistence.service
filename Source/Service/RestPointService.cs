@@ -73,8 +73,8 @@ namespace Persistence.Service
 
         private async Task<IResult> Delete(string id)
         {
-            // TODO:
-            return Results.NotFound();
+            bool success = await repository.Delete(id);
+            return Results.Ok(new { success });
         }
     }
 

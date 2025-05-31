@@ -22,7 +22,7 @@ namespace Persistence.Repository
                 ? default
                 : await compressor.CompressToStream(dataModel);
         }
-        
+
         public async Task<string> Create(Stream dataModelStream)
         {
             CrosslyDataModel? dataModel = await compressor.TryDecompressToDataModel(dataModelStream);
@@ -44,6 +44,11 @@ namespace Persistence.Repository
         public Task<bool> Rename(string id, string newName)
         {
             return persistence.Rename(id, newName);
+        }
+
+        public Task<bool> Delete(string id)
+        {
+            return persistence.Delete(id);
         }
     }
 }

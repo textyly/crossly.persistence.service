@@ -86,5 +86,13 @@ namespace Persistence.Persistence
             bool success = result.IsAcknowledged && result.ModifiedCount == 1;
             return success;
         }
+
+        public async Task<bool> Delete(string id)
+        {
+            DeleteResult result = await dataModelsCollection.DeleteOneAsync(p => p.Id == id);
+
+            bool success = result.IsAcknowledged && result.DeletedCount == 1;
+            return success;
+        }
     }
 }
