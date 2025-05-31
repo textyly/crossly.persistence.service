@@ -20,6 +20,7 @@ namespace Persistence.Service
             webApp.MapGet("/get/by-id", GetByIdDataModel);
             webApp.MapGet("/get/by-name", GetByNameDataModel);
             webApp.MapGet("/get/all", GetAll);
+            webApp.MapPatch("/rename", Rename);
 
             // TODO: check how to use a method, not a lambda
             webApp.MapPost("/save", async (HttpContext httpContext) =>
@@ -74,6 +75,12 @@ namespace Persistence.Service
         {
             string[] ids = await repository.GetAll();
             return Results.Ok(new { ids });
+        }
+
+        private async Task<IResult> Rename(string id, string newName)
+        {
+            bool success = await repository.Rename(id, newName);
+            return Results.Ok(new { success });
         }
     }
 }

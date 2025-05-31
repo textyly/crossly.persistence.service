@@ -50,5 +50,9 @@ namespace Persistence.Repository
                 : await persistence.Replace(id, replacementDataModel);
         }
 
+        public Task<bool> Rename(string id, string newName)
+        {
+            return persistence.Rename(id, newName);
+        }
     }
 }
