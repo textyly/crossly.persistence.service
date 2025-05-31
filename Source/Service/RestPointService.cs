@@ -20,29 +20,18 @@ namespace Persistence.Service
             webApp.MapGet("/api/patterns", GetAll);
             webApp.MapGet("/api/patterns/{id}", GetById);
 
-            // TODO: check how to use a method, not a lambda
-            webApp.MapPost("/api/patterns", async (HttpContext httpContext) =>
-            {
-                Stream body = httpContext.Request.Body;
-                string id = await repository.Create(body);
-
-                return Results.Ok(new { id });
-            });
-
+            webApp.MapPost("/api/patterns", (Delegate)Create);
+            webApp.MapPut("/api/patterns/{id}", Replace);
+            webApp.MapPatch("/api/patterns/{id}/rename", Rename);
             webApp.MapDelete("/api/patterns/{id}", Delete);
 
-            webApp.MapPut("/api/patterns/{id}", async (string id, HttpContext httpContext) =>
-            {
-                Stream body = httpContext.Request.Body;
-                bool success = await repository.Replace(id, body);
-
-                return Results.Ok(new { success });
-            });
-
-            webApp.MapPatch("/api/patterns/{id}/rename", Rename);
-
-
             webApp.Run();
+        }
+
+        private async Task<IResult> GetAll()
+        {
+            string[] ids = await repository.GetAll();
+            return Results.Ok(new { ids });
         }
 
         private async Task<IResult> GetById(string id)
@@ -59,10 +48,21 @@ namespace Persistence.Service
             }
         }
 
-        private async Task<IResult> GetAll()
+        public async Task<IResult> Create(HttpContext httpContext)
         {
-            string[] ids = await repository.GetAll();
-            return Results.Ok(new { ids });
+            Stream body = httpContext.Request.Body;
+            string id = await repository.Create(body);
+
+            return Results.Ok(new { id });
+        }
+
+
+        private async Task<IResult> Replace(string id, HttpContext httpContext)
+        {
+            Stream body = httpContext.Request.Body;
+            bool success = await repository.Replace(id, body);
+
+            return Results.Ok(new { success });
         }
 
         private async Task<IResult> Rename(string id, RenamePatternRequest request)
@@ -74,7 +74,10 @@ namespace Persistence.Service
         private async Task<IResult> Delete(string id)
         {
             bool success = await repository.Delete(id);
-            return Results.Ok(new { success });
+
+            return success
+                ? Results.NoContent()
+                : Results.NotFound();
         }
     }
 
