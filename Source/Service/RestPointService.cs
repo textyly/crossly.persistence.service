@@ -52,7 +52,7 @@ namespace Persistence.Service
             else
             {
                 stream!.Position = 0;
-                return Results.File(stream, contentType: "application/octet-stream", fileDownloadName: null);
+                return Results.File(stream, contentType: "application/octet-stream", fileDownloadName: default);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Persistence.Service
             else
             {
                 stream!.Position = 0;
-                return Results.File(stream, contentType: "application/octet-stream", fileDownloadName: null);
+                return Results.File(stream, contentType: "application/octet-stream", fileDownloadName: default);
             }
         }
 

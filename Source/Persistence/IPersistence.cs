@@ -41,5 +41,13 @@ namespace Persistence.Persistence
         /// <param name="newDataModel"></param>
         /// <returns></returns>
         Task<bool> Replace(string id, CrosslyDataModel newDataModel);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="newName"></param>
+        /// <returns></returns>
+        Task<bool> Rename(string id, string newName);
     }
 }

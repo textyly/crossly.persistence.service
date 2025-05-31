@@ -19,7 +19,7 @@ namespace Persistence.Repository
             CrosslyDataModel? dataModel = await persistence.GetById(id);
 
             return dataModel is null
-                ? null
+                ? default
                 : await compressor.CompressToStream(dataModel);
         }
 
@@ -28,7 +28,7 @@ namespace Persistence.Repository
             CrosslyDataModel? dataModel = await persistence.GetByName(name);
 
             return dataModel is null
-                ? null
+                ? default
                 : await compressor.CompressToStream(dataModel);
         }
 
