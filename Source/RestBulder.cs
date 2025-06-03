@@ -13,10 +13,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-var webbApp = builder.Build();
+var webApp = builder.Build();
 
 // Enable CORS globally for testing
-webbApp.UseCors();
+webApp.UseCors();
 
-RestEndpointApp restEndpointApp = new(webbApp);
-await restEndpointApp.Run();
+RestApp restApp = new(webApp);
+await restApp.Run();
