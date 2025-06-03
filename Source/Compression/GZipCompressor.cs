@@ -35,7 +35,6 @@ namespace Persistence.Compression
             await streamWriter.WriteAsync(jsonDataModel);
             await streamWriter.FlushAsync();
 
-            memoryStream.Position = 0;
             return memoryStream;
         }
     }

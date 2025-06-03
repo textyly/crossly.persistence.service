@@ -6,22 +6,22 @@ namespace Persistence.Validation
     {
         public void ThrowIfInvalid(string id)
         {
-            throw new NotImplementedException();
+            // TODO: 
         }
 
         public void ThrowIfInvalid(string id, string newName)
         {
-            throw new NotImplementedException();
+            // TODO: 
         }
 
-        public void ThrowIfInvalid(Stream dataModelStream)
+        public void ThrowIfInvalid(Stream? dataModelStream)
         {
-            throw new NotImplementedException();
+            // TODO: 
         }
 
         public void ThrowIfInvalid(CrosslyDataModel? dataModel)
         {
-            throw new NotImplementedException();
+            // TODO: 
         }
     }
 }

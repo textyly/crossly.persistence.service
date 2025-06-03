@@ -66,6 +66,7 @@ namespace Persistence.Service
             validator.ThrowIfInvalid(dataModelStream);
 
             // then real work:
+            dataModelStream.Seek(0, SeekOrigin.Begin);
             return Results.File(dataModelStream, "application/octet-stream");
         }
 
