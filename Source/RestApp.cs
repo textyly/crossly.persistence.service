@@ -13,25 +13,31 @@ namespace Persistence
     {
         public async Task Run()
         {
+            IPersistence persistence = CreatePersistence();
+            await persistence.Start();
+
+            IRequestHandler handler = CreateRequestHandler(persistence);
+            RestService service = new(webApp, handler);
+
+            service.Run();
+        }
+
+        private static IRequestHandler CreateRequestHandler(IPersistence persistence)
+        {
             Validator validator = new();
             GZipCompressor compressor = new();
-            MongoDbPersistence persistence = await CreatePersistence();
             DataModelRepository repository = new("", persistence); // TODO: !!!
+
             RequestFactory factory = new(validator, compressor, repository);
             RequestHandler handler = new(factory);
 
-            RestService service = new(webApp, handler);
-            service.RegisterMethods();
-
-            webApp.Run();
+            return handler;
         }
 
-        private static async Task<MongoDbPersistence> CreatePersistence()
+        private static IPersistence CreatePersistence()
         {
             Converter converter = new();
             MongoDbPersistence persistence = new(converter);
-
-            await persistence.Start();
             return persistence;
         }
     }

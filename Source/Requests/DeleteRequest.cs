@@ -14,6 +14,7 @@ namespace Persistence.Requests
         {
             this.repository = repository;
 
+            // TODO: export to validator
             if (validator.ValidateId(input.Id, out error))
             {
                 id = input.Id;

@@ -20,7 +20,8 @@ namespace Persistence.Requests
             this.repository = repository;
             this.validator = validator;
             this.compressor = compressor;
-
+            
+            // TODO: export to validator
             if (validator.ValidateId(input.Id, out error))
             {
                 id = input.Id;

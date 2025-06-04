@@ -19,9 +19,13 @@ namespace Persistence.Service
             rootPath = "/api/v1/patterns";      // -> /api/v1/patterns
             idPath = $"{rootPath}/{{id}}";      // -> /api/v1/patterns/{id}
             renamePath = $"{idPath}/rename";    // -> /api/v1/patterns/{id}/rename
+
+            RegisterMethods();
         }
 
-        public void RegisterMethods()
+        public void Run() => webApp.Run();
+
+        private void RegisterMethods()
         {
             RegisterGetAll();    // -> /api/v1/patterns
             RegisterGetById();   // -> /api/v1/patterns/abc123

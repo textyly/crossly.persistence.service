@@ -21,6 +21,7 @@ namespace Persistence.Requests
             this.validator = validator;
             this.compressor = compressor;
 
+            // TODO: export to validator
             if (validator.ValidateStream(input.DataModelStream, out error))
             {
                 dataModelStream = input.DataModelStream;
