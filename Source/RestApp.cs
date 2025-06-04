@@ -3,6 +3,9 @@ using Persistence.Validation;
 using Persistence.Conversion;
 using Persistence.Persistence;
 using Persistence.Compression;
+using Persistence.Repository;
+using Persistence.Requests;
+using Persistence.Handler;
 
 namespace Persistence
 {
@@ -13,14 +16,17 @@ namespace Persistence
             Validator validator = new();
             GZipCompressor compressor = new();
             MongoDbPersistence persistence = await CreatePersistence();
+            DataModelRepository repository = new("", persistence); // TODO: !!!
+            RequestFactory factory = new(validator, compressor, repository);
+            RequestHandler handler = new(factory);
 
-            RestService service = new(webApp, validator, compressor, persistence);
+            RestService service = new(webApp, handler);
             service.RegisterMethods();
 
             webApp.Run();
         }
 
-        private async Task<MongoDbPersistence> CreatePersistence()
+        private static async Task<MongoDbPersistence> CreatePersistence()
         {
             Converter converter = new();
             MongoDbPersistence persistence = new(converter);

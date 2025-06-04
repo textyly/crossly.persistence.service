@@ -4,9 +4,10 @@ namespace Persistence.Validation
 {
     public interface IValidator
     {
-        void ThrowIfInvalid(string id);
-        void ThrowIfInvalid(string id, string newName);
-        void ThrowIfInvalid(Stream? dataModelStream);
-        void ThrowIfInvalid(CrosslyDataModel? dataModel);
+        bool ValidateId(string? id, out IResult? error);
+        bool ValidateName(string? name, out IResult? error);
+        bool ValidateStream(Stream? dataModelStream, out IResult? error);
+        bool ValidateDataModel(CrosslyDataModel? dataModel, out IResult? error);
+        bool ValidateRename(string? id, string? name, out IResult? error);
     }
 }
