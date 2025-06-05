@@ -1,11 +1,10 @@
+using Persistence.Handler;
 using Persistence.Service;
+using Persistence.Request;
 using Persistence.Validation;
 using Persistence.Conversion;
 using Persistence.Persistence;
 using Persistence.Compression;
-using Persistence.Repository;
-using Persistence.Requests;
-using Persistence.Handler;
 
 namespace Persistence
 {
@@ -26,9 +25,11 @@ namespace Persistence
         {
             Validator validator = new();
             GZipCompressor compressor = new();
-            DataModelRepository repository = new("", persistence); // TODO: !!!
 
-            RequestFactory factory = new(validator, compressor, repository);
+            string createdUri = $"{"???"}/{{0}}";   // TODO: !!! // -> /api/v1/patterns/{0}
+            Repository.Repository repository = new(createdUri, persistence, validator, compressor);
+
+            RequestFactory factory = new(validator, repository);
             RequestHandler handler = new(factory);
 
             return handler;

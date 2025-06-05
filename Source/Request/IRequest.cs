@@ -1,4 +1,4 @@
-namespace Persistence.Requests
+namespace Persistence.Request
 {
     public interface IRequest
     {

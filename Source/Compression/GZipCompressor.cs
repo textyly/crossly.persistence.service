@@ -14,7 +14,7 @@ namespace Persistence.Compression
             serializerOptions = JsonSerializerOptions.Web;
         }
 
-        public async Task<CrosslyDataModel?> TryDecompressToDataModel(Stream dataModelStream)
+        public async Task<CrosslyDataModel?> DecompressToDataModel(Stream dataModelStream)
         {
             using var gzipStream = new GZipStream(dataModelStream, CompressionMode.Decompress);
 

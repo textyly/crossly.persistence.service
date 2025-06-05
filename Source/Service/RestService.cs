@@ -19,27 +19,23 @@ namespace Persistence.Service
             rootPath = "/api/v1/patterns";      // -> /api/v1/patterns
             idPath = $"{rootPath}/{{id}}";      // -> /api/v1/patterns/{id}
             renamePath = $"{idPath}/rename";    // -> /api/v1/patterns/{id}/rename
-
-            RegisterMethods();
         }
 
-        public void Run() => webApp.Run();
+        public void Run()
+        {
+            RegisterMethods();
+
+            webApp.Run();
+        }
 
         private void RegisterMethods()
         {
-            RegisterGetAll();    // -> /api/v1/patterns
-            RegisterGetById();   // -> /api/v1/patterns/abc123
-            RegisterCreate();    // -> /api/v1/patterns
-            RegisterReplace();   // -> /api/v1/patterns/abc123
-            RegisterRename();    // -> /api/v1/patterns/abc123/rename
-            RegisterDelete();    // -> /api/v1/patterns/abc123
+            webApp.MapGet(rootPath, requestHandler.GetAll);             // get all patterns     -> /api/v1/patterns
+            webApp.MapGet(idPath, requestHandler.GetById);              // get a pattern        -> /api/v1/patterns/abc123
+            webApp.MapPost(rootPath, (Delegate)requestHandler.Create);  // create a pattern     -> /api/v1/patterns
+            webApp.MapPut(idPath, requestHandler.Replace);              // replace a pattern    -> /api/v1/patterns/abc123
+            webApp.MapPatch(renamePath, requestHandler.Rename);         // rename a pattern     -> /api/v1/patterns/abc123/rename
+            webApp.MapDelete(idPath, requestHandler.Delete);            // delete a pattern     -> /api/v1/patterns/abc123
         }
-
-        private void RegisterGetAll() => webApp.MapGet(rootPath, requestHandler.GetAll);
-        private void RegisterGetById() => webApp.MapGet(idPath, requestHandler.GetById);
-        private void RegisterCreate() => webApp.MapPost(rootPath, (Delegate)requestHandler.Create);
-        private void RegisterReplace() => webApp.MapPut(idPath, requestHandler.Replace);
-        private void RegisterRename() => webApp.MapPatch(renamePath, requestHandler.Rename);
-        private void RegisterDelete() => webApp.MapDelete(idPath, requestHandler.Delete);
     }
 }

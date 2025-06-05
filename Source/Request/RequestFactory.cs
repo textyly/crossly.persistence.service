@@ -1,32 +1,31 @@
 using Persistence.Repository;
 using Persistence.Validation;
-using Persistence.Compression;
 
-namespace Persistence.Requests
+namespace Persistence.Request
 {
-    public class RequestFactory(IValidator validator, ICompressor compressor, IRepository repository) : IRequestFactory
+    public class RequestFactory(IValidator validator, IRepository repository) : IRequestFactory
     {
-        public IRequest CreateGetAll()
+        public IRequest CreateGetAll(GetAllInput input)
         {
-            GetAllRequest getAll = new(repository);
+            GetAllRequest getAll = new(input, repository);
             return getAll;
         }
 
         public IRequest CreateGetById(GetByIdInput input)
         {
-            GetByIdRequest getById = new(input, repository, validator, compressor);
+            GetByIdRequest getById = new(input, repository, validator);
             return getById;
         }
 
         public IRequest CreateCreate(CreateInput input)
         {
-            CreateRequest replace = new(input, repository, validator, compressor);
+            CreateRequest replace = new(input, repository, validator);
             return replace;
         }
 
         public IRequest CreateReplace(ReplaceInput input)
         {
-            ReplaceRequest replace = new(input, repository, validator, compressor);
+            ReplaceRequest replace = new(input, repository, validator);
             return replace;
         }
 

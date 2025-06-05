@@ -1,4 +1,4 @@
-using Persistence.Requests;
+using Persistence.Request;
 
 namespace Persistence.Handler
 {
@@ -6,7 +6,9 @@ namespace Persistence.Handler
     {
         public async Task<IResult> GetAll()
         {
-            IRequest getAll = requestFactory.CreateGetAll();
+            GetAllInput input = new();
+
+            IRequest getAll = requestFactory.CreateGetAll(input);
             IResult result = await getAll.Execute();
 
             return result;

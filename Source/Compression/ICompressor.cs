@@ -4,7 +4,7 @@ namespace Persistence.Compression
 {
     public interface ICompressor
     {
-        Task<CrosslyDataModel?> TryDecompressToDataModel(Stream dataModelStream);
+        Task<CrosslyDataModel?> DecompressToDataModel(Stream dataModelStream);
         Task<Stream> CompressToStream(CrosslyDataModel dataModel);
     }
 }
