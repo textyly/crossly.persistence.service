@@ -1,5 +1,3 @@
-using Persistence.DataModel;
-
 namespace Persistence.Repository
 {
     public interface IRepository

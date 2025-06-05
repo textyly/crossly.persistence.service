@@ -10,8 +10,9 @@ namespace Persistence.Repository
         public async Task<IResult> GetAll()
         {
             string[] ids = await persistence.GetAll();
+            object[] links = CreateLinks(ids);
 
-            return Results.Ok(new { ids });
+            return Results.Ok(new { links });
         }
 
         public async Task<IResult> GetById(string id)
@@ -57,6 +58,31 @@ namespace Persistence.Repository
             return success
                 ? Results.NoContent()
                 : Results.NotFound();
+        }
+
+        // TODO: extract in a helper class and stop using object and anonymous type
+        private object[] CreateLinks(string[] ids)
+        {
+            List<object> links = [];
+
+            foreach (string id in ids)
+            {
+                object link = new
+                {
+                    id,
+                    links = new
+                    {
+                        self = linkGenerator.GetPathByName("GetPatternById", new { id }),
+                        replace = linkGenerator.GetPathByName("ReplacePattern", new { id }),
+                        rename = linkGenerator.GetPathByName("RenamePattern", new { id }),
+                        delete = linkGenerator.GetPathByName("DeletePattern", new { id }),
+                    }
+                };
+
+                links.Add(link);
+            }
+
+            return [.. links];
         }
 
         private async Task<IResult> CreateGetByIdResult(CrosslyDataModel dataModel)
