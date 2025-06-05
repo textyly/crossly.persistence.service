@@ -9,7 +9,7 @@ namespace Persistence.Validation
 
         public bool IsValidStream(Stream? dataModelStream)
         {
-            return dataModelStream is not null && dataModelStream.Length > 0;
+            return dataModelStream is not null;
         }
 
         public bool IsValidDataModel(CrosslyDataModel? dataModel)

@@ -3,7 +3,7 @@ using Persistence.Validation;
 
 namespace Persistence.Request
 {
-    public class RequestFactory(IValidator validator, IRepository repository) : IRequestFactory
+    public class RequestFactory(IRepository repository, IValidator validator) : IRequestFactory
     {
         public IRequest CreateGetAll(GetAllInput input)
         {

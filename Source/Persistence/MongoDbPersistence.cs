@@ -19,19 +19,14 @@ namespace Persistence.Persistence
 
             MongoClient client = new(connectionString);
             IMongoDatabase database = client.GetDatabase(dbName);
+
+            var collectionNames = database.ListCollectionNames().ToList();
+            if (!collectionNames.Contains(collectionName))
+            {
+                throw new Exception($"Collection '{collectionName}' does not exist in database '{dbName}'.");
+            }
+
             dataModelsCollection = database.GetCollection<BsonCrosslyDataModel>(collectionName);
-        }
-
-        public async Task Start()
-        {
-            // TODO: do we need index???
-            IndexKeysDefinition<BsonCrosslyDataModel> indexKeys =
-                Builders<BsonCrosslyDataModel>.IndexKeys.Ascending(p => p.Name);
-
-            CreateIndexOptions indexOptions = new() { Unique = true };
-            CreateIndexModel<BsonCrosslyDataModel> indexModel = new(indexKeys, indexOptions);
-
-            await dataModelsCollection.Indexes.CreateOneAsync(indexModel);
         }
 
         public async Task<string[]> GetAll()

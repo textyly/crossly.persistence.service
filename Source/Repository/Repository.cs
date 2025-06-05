@@ -5,7 +5,7 @@ using Persistence.Persistence;
 
 namespace Persistence.Repository
 {
-    public class Repository(string createdUri, IPersistence persistence, IValidator validator, ICompressor compressor) : IRepository
+    public class Repository(IPersistence persistence, IValidator validator, ICompressor compressor, LinkGenerator linkGenerator) : IRepository
     {
         public async Task<IResult> GetAll()
         {
@@ -80,7 +80,7 @@ namespace Persistence.Repository
         private async Task<IResult> CreateCreateResult(CrosslyDataModel dataModel)
         {
             string id = await persistence.Create(dataModel);
-            string uri = string.Format(createdUri, id);
+            string uri = linkGenerator.GetPathByName("GetPatternById", new { id })!;
 
             return Results.Created(uri, new { id });
         }

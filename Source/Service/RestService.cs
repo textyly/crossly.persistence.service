@@ -2,40 +2,31 @@ using Persistence.Handler;
 
 namespace Persistence.Service
 {
-    public class RestService
+    public class RestService(IRequestHandler requestHandler)
     {
-        private readonly string rootPath;
-        private readonly string idPath;
-        private readonly string renamePath;
-        private readonly WebApplication webApp;
-        private readonly IRequestHandler requestHandler;
+        private const string rootPath = "/api/v1/patterns";      // -> /api/v1/patterns
+        private const string idPath = $"{rootPath}/{{id}}";      // -> /api/v1/patterns/{id}
+        private const string renamePath = $"{idPath}/rename";    // -> /api/v1/patterns/{id}/rename
 
-        public RestService(WebApplication webApp, IRequestHandler requestHandler)
+        public void RegisterMethods(WebApplication app)
         {
-            this.webApp = webApp;
-            this.requestHandler = requestHandler;
+            app.MapGet(rootPath, requestHandler.GetAll)
+               .WithName("GetAllPatterns");
 
-            // TODO: implement HATEOS
-            rootPath = "/api/v1/patterns";      // -> /api/v1/patterns
-            idPath = $"{rootPath}/{{id}}";      // -> /api/v1/patterns/{id}
-            renamePath = $"{idPath}/rename";    // -> /api/v1/patterns/{id}/rename
-        }
+            app.MapGet(idPath, requestHandler.GetById)
+               .WithName("GetPatternById");
 
-        public void Run()
-        {
-            RegisterMethods();
+            app.MapPost(rootPath, (Delegate)requestHandler.Create)
+               .WithName("CreatePattern");
 
-            webApp.Run();
-        }
+            app.MapPut(idPath, requestHandler.Replace)
+               .WithName("ReplacePattern");
 
-        private void RegisterMethods()
-        {
-            webApp.MapGet(rootPath, requestHandler.GetAll);             // get all patterns     -> /api/v1/patterns
-            webApp.MapGet(idPath, requestHandler.GetById);              // get a pattern        -> /api/v1/patterns/abc123
-            webApp.MapPost(rootPath, (Delegate)requestHandler.Create);  // create a pattern     -> /api/v1/patterns
-            webApp.MapPut(idPath, requestHandler.Replace);              // replace a pattern    -> /api/v1/patterns/abc123
-            webApp.MapPatch(renamePath, requestHandler.Rename);         // rename a pattern     -> /api/v1/patterns/abc123/rename
-            webApp.MapDelete(idPath, requestHandler.Delete);            // delete a pattern     -> /api/v1/patterns/abc123
+            app.MapPatch(renamePath, requestHandler.Rename)
+               .WithName("RenamePattern");
+
+            app.MapDelete(idPath, requestHandler.Delete)
+               .WithName("DeletePattern");
         }
     }
 }

@@ -1,45 +1,40 @@
+using Persistence.Request;
 using Persistence.Handler;
 using Persistence.Service;
-using Persistence.Request;
+using Persistence.Repository;
 using Persistence.Validation;
 using Persistence.Conversion;
-using Persistence.Persistence;
 using Persistence.Compression;
+using Persistence.Persistence;
 
-namespace Persistence
+var builder = WebApplication.CreateSlimBuilder(args);
+
+// Register CORS for testing
+builder.Services.AddCors(options =>
 {
-    public class RestApp(WebApplication webApp)
+    options.AddDefaultPolicy(policy =>
     {
-        public async Task Run()
-        {
-            IPersistence persistence = CreatePersistence();
-            await persistence.Start();
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
-            IRequestHandler handler = CreateRequestHandler(persistence);
-            RestService service = new(webApp, handler);
+builder.Services.AddSingleton<IConverter, Converter>();
+builder.Services.AddSingleton<IValidator, Validator>();
+builder.Services.AddSingleton<ICompressor, GZipCompressor>();
+builder.Services.AddSingleton<IPersistence, MongoDbPersistence>();
+builder.Services.AddSingleton<IRepository, Repository>();
+builder.Services.AddSingleton<IRequestFactory, RequestFactory>();
+builder.Services.AddSingleton<IRequestHandler, RequestHandler>();
+builder.Services.AddSingleton<RestService>();
 
-            service.Run();
-        }
+var app = builder.Build();
 
-        private static IRequestHandler CreateRequestHandler(IPersistence persistence)
-        {
-            Validator validator = new();
-            GZipCompressor compressor = new();
+// Enable CORS globally for testing
+app.UseCors();
 
-            string createdUri = $"{"???"}/{{0}}";   // TODO: !!! // -> /api/v1/patterns/{0}
-            Repository.Repository repository = new(createdUri, persistence, validator, compressor);
+var restService = app.Services.GetRequiredService<RestService>();
+restService.RegisterMethods(app);
 
-            RequestFactory factory = new(validator, repository);
-            RequestHandler handler = new(factory);
-
-            return handler;
-        }
-
-        private static IPersistence CreatePersistence()
-        {
-            Converter converter = new();
-            MongoDbPersistence persistence = new(converter);
-            return persistence;
-        }
-    }
-}
+app.Run();
