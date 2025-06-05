@@ -10,7 +10,7 @@ namespace Persistence.Repository
         public async Task<IResult> GetAll()
         {
             string[] ids = await persistence.GetAll();
-            object[] links = CreateLinks(ids);
+            Link[] links = CreateLinks(ids);
 
             return Results.Ok(new { links });
         }
@@ -60,25 +60,13 @@ namespace Persistence.Repository
                 : Results.NotFound();
         }
 
-        // TODO: extract in a helper class and stop using object and anonymous type
-        private object[] CreateLinks(string[] ids)
+        private Link[] CreateLinks(string[] ids)
         {
-            List<object> links = [];
+            List<Link> links = [];
 
             foreach (string id in ids)
             {
-                object link = new
-                {
-                    id,
-                    links = new
-                    {
-                        self = linkGenerator.GetPathByName("GetPatternById", new { id }),
-                        replace = linkGenerator.GetPathByName("ReplacePattern", new { id }),
-                        rename = linkGenerator.GetPathByName("RenamePattern", new { id }),
-                        delete = linkGenerator.GetPathByName("DeletePattern", new { id }),
-                    }
-                };
-
+                Link link = GenerateLink(id);
                 links.Add(link);
             }
 
@@ -106,9 +94,11 @@ namespace Persistence.Repository
         private async Task<IResult> CreateCreateResult(CrosslyDataModel dataModel)
         {
             string id = await persistence.Create(dataModel);
-            string uri = linkGenerator.GetPathByName("GetPatternById", new { id })!;
 
-            return Results.Created(uri, new { id });
+            string uri = linkGenerator.GetPathByName("GetPatternById", new { id })!;
+            Link link = GenerateLink(id);
+
+            return Results.Created(uri, new { link });
         }
 
         private async Task<IResult> CreateReplaceResult(string id, CrosslyDataModel dataModel)
@@ -119,5 +109,18 @@ namespace Persistence.Repository
                 ? Results.Ok()
                 : Results.NotFound();
         }
+
+        private Link GenerateLink(string id)
+        {
+            Link link = new(
+                    GetById: linkGenerator.GetPathByName("GetPatternById", new { id })!,
+                    Replace: linkGenerator.GetPathByName("ReplacePattern", new { id })!,
+                    Rename: linkGenerator.GetPathByName("RenamePattern", new { id })!,
+                    Delete: linkGenerator.GetPathByName("DeletePattern", new { id })!);
+
+            return link;
+        }
     }
+
+    record Link(string GetById, string Replace, string Rename, string Delete);
 }
