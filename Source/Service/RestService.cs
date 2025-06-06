@@ -2,31 +2,29 @@ using Persistence.Handler;
 
 namespace Persistence.Service
 {
-    public class RestService(IRequestHandler requestHandler)
-    {
-        private const string rootPath = "/api/v1/patterns";      // -> /api/v1/patterns
-        private const string idPath = $"{rootPath}/{{id}}";      // -> /api/v1/patterns/{id}
-        private const string renamePath = $"{idPath}/rename";    // -> /api/v1/patterns/{id}/rename
+   public class RestService(IRequestHandler requestHandler)
+   {
+      public void RegisterMethods(WebApplication app)
+      {
+         var group = app.MapGroup("/api/v1/patterns");
 
-        public void RegisterMethods(WebApplication app)
-        {
-            app.MapGet(rootPath, requestHandler.GetAll)
-               .WithName("GetAllPatterns");
+         group.MapGet(string.Empty, requestHandler.GetAll)
+            .WithName("GetAllPatterns");
 
-            app.MapGet(idPath, requestHandler.GetById)
-               .WithName("GetPatternById");
+         group.MapGet("{id}", requestHandler.GetById)
+            .WithName("GetPatternById");
 
-            app.MapPost(rootPath, (Delegate)requestHandler.Create)
-               .WithName("CreatePattern");
+         group.MapPost(string.Empty, (Delegate)requestHandler.Create)
+            .WithName("CreatePattern");
 
-            app.MapPut(idPath, requestHandler.Replace)
-               .WithName("ReplacePattern");
+         group.MapPut("{id}", requestHandler.Replace)
+            .WithName("ReplacePattern");
 
-            app.MapPatch(renamePath, requestHandler.Rename)
-               .WithName("RenamePattern");
+         group.MapPatch("{id}/rename", requestHandler.Rename)
+            .WithName("RenamePattern");
 
-            app.MapDelete(idPath, requestHandler.Delete)
-               .WithName("DeletePattern");
-        }
-    }
+         group.MapDelete("{id}", requestHandler.Delete)
+            .WithName("DeletePattern");
+      }
+   }
 }

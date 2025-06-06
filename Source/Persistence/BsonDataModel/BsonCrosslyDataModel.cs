@@ -14,6 +14,9 @@ namespace Persistence.Persistence.BsonDataModel
         [BsonElement("name")]
         public string Name { get; set; } = null!;
 
+        [BsonElement("version")]
+        public string Version { get; set; } = null!;
+
         [BsonElement("fabric")]
         public BsonFabricDataModel Fabric { get; set; } = null!;
 

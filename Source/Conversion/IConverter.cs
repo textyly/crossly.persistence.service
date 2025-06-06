@@ -5,6 +5,7 @@ namespace Persistence.Conversion
 {
     public interface IConverter
     {
+        public Version Version { get; }
         BsonCrosslyDataModel Convert(CrosslyDataModel dataModel);
         CrosslyDataModel Convert(BsonCrosslyDataModel dataModel);
     }

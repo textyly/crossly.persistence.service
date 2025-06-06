@@ -4,6 +4,8 @@ namespace Persistence.Validation
 {
     public interface IValidator
     {
+        Version Version { get; }
+
         bool IsValidId(string? id);
         bool IsValidName(string? name);
         bool IsValidStream(Stream? dataModelStream);
