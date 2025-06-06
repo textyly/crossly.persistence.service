@@ -35,7 +35,7 @@ namespace Persistence.Conversion
             string version = Version.ToString();
             if (version != bsonDataModel.Version)
             {
-                throw new ValidationException($"version mismatch, converter version is {version} whereas bson data mode version is {bsonDataModel.Version}");
+                throw new Exception($"version mismatch, converter version is {version} whereas bson data mode version is {bsonDataModel.Version}");
             }
 
             string name = bsonDataModel.Name;
