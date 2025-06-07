@@ -1,3 +1,4 @@
+using Persistence.HATEOS;
 using Persistence.Request;
 using Persistence.Handler;
 using Persistence.Service;
@@ -6,7 +7,6 @@ using Persistence.Validation;
 using Persistence.Conversion;
 using Persistence.Compression;
 using Persistence.Persistence;
-using Persistence.HATEOS;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
