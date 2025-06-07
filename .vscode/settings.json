@@ -5,8 +5,6 @@
         "**/.gitignore": true,
         "**/LICENSE": true,
         "**/README*": true,
-        "**/*sln*": true,
-        "**/*csproj*": true,
     },
     "search.exclude": {
         "**/bin": true,
