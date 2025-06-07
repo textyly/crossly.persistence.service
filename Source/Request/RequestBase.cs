@@ -18,6 +18,8 @@ namespace Persistence.Request
 
         private async Task<IResult> Execute(TInput input)
         {
+            // TODO: is it ok to have error handling here? We know that errors here are internal
+            // but should we handle them here or on a higher level???
             try
             {
                 // TODO: add metric

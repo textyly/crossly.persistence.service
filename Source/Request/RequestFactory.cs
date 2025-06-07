@@ -7,7 +7,7 @@ namespace Persistence.Request
     {
         public IRequest CreateGetAll(GetAllInput input)
         {
-            GetAllRequest getAll = new(input, repository);
+            GetAllRequest getAll = new(input, repository, validator);
             return getAll;
         }
 

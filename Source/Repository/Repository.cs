@@ -1,3 +1,4 @@
+using Persistence.HATEOS;
 using Persistence.DataModel;
 using Persistence.Validation;
 using Persistence.Compression;
@@ -5,12 +6,12 @@ using Persistence.Persistence;
 
 namespace Persistence.Repository
 {
-    public class Repository(IPersistence persistence, IValidator validator, ICompressor compressor, LinkGenerator linkGenerator) : IRepository
+    public class Repository(IPersistence persistence, IValidator validator, ICompressor compressor, IApiGenerator apiGenerator) : IRepository
     {
         public async Task<IResult> GetAll()
         {
             string[] ids = await persistence.GetAll();
-            Link[] links = CreateLinks(ids);
+            Link[] links = apiGenerator.GenerateLinks(ids);
 
             return Results.Ok(new { links });
         }
@@ -60,19 +61,6 @@ namespace Persistence.Repository
                 : Results.NotFound();
         }
 
-        private Link[] CreateLinks(string[] ids)
-        {
-            List<Link> links = [];
-
-            foreach (string id in ids)
-            {
-                Link link = GenerateLink(id);
-                links.Add(link);
-            }
-
-            return [.. links];
-        }
-
         private async Task<IResult> CreateGetByIdResult(CrosslyDataModel dataModel)
         {
             if (!validator.IsValidDataModel(dataModel))
@@ -94,11 +82,9 @@ namespace Persistence.Repository
         private async Task<IResult> CreateCreateResult(CrosslyDataModel dataModel)
         {
             string id = await persistence.Create(dataModel);
+            Link link = apiGenerator.GenerateLink(id);
 
-            string uri = linkGenerator.GetPathByName("GetPatternById", new { id })!;
-            Link link = GenerateLink(id);
-
-            return Results.Created(uri, new { link });
+            return Results.Created(link.GetById, new { link });
         }
 
         private async Task<IResult> CreateReplaceResult(string id, CrosslyDataModel dataModel)
@@ -109,18 +95,5 @@ namespace Persistence.Repository
                 ? Results.Ok()
                 : Results.NotFound();
         }
-
-        private Link GenerateLink(string id)
-        {
-            Link link = new(
-                    GetById: linkGenerator.GetPathByName("GetPatternById", new { id })!,
-                    Replace: linkGenerator.GetPathByName("ReplacePattern", new { id })!,
-                    Rename: linkGenerator.GetPathByName("RenamePattern", new { id })!,
-                    Delete: linkGenerator.GetPathByName("DeletePattern", new { id })!);
-
-            return link;
-        }
     }
-
-    record Link(string GetById, string Replace, string Rename, string Delete);
 }

@@ -6,6 +6,7 @@ using Persistence.Validation;
 using Persistence.Conversion;
 using Persistence.Compression;
 using Persistence.Persistence;
+using Persistence.HATEOS;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddSingleton<IApiGenerator, ApiGenerator>();
 builder.Services.AddSingleton<IConverter, Converter>();
 builder.Services.AddSingleton<IValidator, Validator>();
 builder.Services.AddSingleton<ICompressor, GZipCompressor>();
