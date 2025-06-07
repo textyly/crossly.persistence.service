@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "source\Persistence.csproj", "{B7621F7E-D018-4071-8FD5-245CE12134A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Source1\Persistence.csproj", "{B7621F7E-D018-4071-8FD5-245CE12134A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence.Tests", "tests\Persistence.Tests.csproj", "{D06E035A-2AFB-4A83-B9DE-79FD06AD9326}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence.Tests", "Tests1\Persistence.Tests.csproj", "{D06E035A-2AFB-4A83-B9DE-79FD06AD9326}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

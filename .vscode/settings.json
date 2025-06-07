@@ -1,16 +1,16 @@
 {
     "files.exclude": {
-        "**/bin": true,
-        "**/obj": true,
-        "**/.gitignore": true,
-        "**/LICENSE": true,
-        "**/README*": true,
-        "**/*sln*": true,
-        "**/*csproj*": true,
+        "**/bin": false,
+        "**/obj": false,
+        "**/.gitignore": false,
+        "**/LICENSE": false,
+        "**/README*": false,
+        "**/*sln*": false,
+        "**/*csproj*": false,
     },
     "search.exclude": {
-        "**/bin": true,
-        "**/obj": true
+        "**/bin": false,
+        "**/obj": false
     },
     "cSpell.words": [
         "ASPNETCORE",
