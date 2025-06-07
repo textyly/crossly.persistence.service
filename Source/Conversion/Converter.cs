@@ -6,14 +6,21 @@ using Persistence.Persistence.BsonDataModel;
 
 namespace Persistence.Conversion
 {
-    // TODO: indexesX and indexesY (pattern) will come in validated gzip format and conversion will not be needed for them
-    // they will be saved into the database as they are, in gzip format in order to save space and CPU
     public class Converter : IConverter
     {
+        public Version Version => new(0, 0, 0, 1); // increase on breaking change and keep in sync with data model's version!!!
+
         public BsonCrosslyDataModel Convert(CrosslyDataModel dataModel)
         {
+            string version = Version.ToString();
+            if (version != dataModel.Version)
+            {
+                throw new Exception($"version mismatch, converter version is {version} whereas data mode version is {dataModel.Version}");
+            }
+
             BsonCrosslyDataModel bsonDataModel = new()
             {
+                Version = dataModel.Version,
                 Name = dataModel.Name,
                 Fabric = CreateBsonFabricDataModel(dataModel.Fabric),
                 Threads = CreateBsonThreadsDataModel(dataModel.Threads),
@@ -25,12 +32,18 @@ namespace Persistence.Conversion
 
         public CrosslyDataModel Convert(BsonCrosslyDataModel bsonDataModel)
         {
+            string version = Version.ToString();
+            if (version != bsonDataModel.Version)
+            {
+                throw new Exception($"version mismatch, converter version is {version} whereas bson data mode version is {bsonDataModel.Version}");
+            }
+
             string name = bsonDataModel.Name;
             FabricDataModel fabric = CreateFabricDataModel(bsonDataModel.Fabric);
             ThreadDataModel[] threads = CreateThreadsDataModel(bsonDataModel.Threads);
             ThreadPathDataModel[] pattern = CreatePatternDataModel(bsonDataModel.Pattern);
 
-            CrosslyDataModel crosslyDataModel = new(name, fabric, threads, pattern);
+            CrosslyDataModel crosslyDataModel = new(bsonDataModel.Version, name, fabric, threads, pattern);
 
             return crosslyDataModel;
         }
