@@ -5,6 +5,7 @@ using Persistence.DataModel.Threads;
 namespace Persistence.DataModel
 {
     public record CrosslyDataModel(
+        string Version,
         string Name,
         FabricDataModel Fabric,
         ThreadDataModel[] Threads,

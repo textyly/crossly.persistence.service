@@ -4,21 +4,11 @@ namespace Persistence.Persistence
 {
     public interface IPersistence
     {
-
-        Task Start();
-
-        /// <summary>
-        /// TBD 
-        /// </summary>
-        /// <param name="dataModel">TBD</param>
-        /// <returns>id of the persisted data model</returns>
-        Task<string> Save(CrosslyDataModel dataModel);
-
-        /// <summary>
-        /// TBD
-        /// </summary>
-        /// <param name="id">TBD</param>
-        /// <returns>TBD</returns>
-        Task<CrosslyDataModel?> Get(string id);
+        Task<string[]> GetAll();
+        Task<CrosslyDataModel?> GetById(string id);
+        Task<string> Create(CrosslyDataModel dataModel);
+        Task<bool> Replace(string id, CrosslyDataModel newDataModel);
+        Task<bool> Rename(string id, string newName);
+        Task<bool> Delete(string id);
     }
 }

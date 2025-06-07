@@ -5,8 +5,6 @@ using Persistence.DataModel;
 
 namespace Persistence.Compression
 {
-    // TODO: indexesX and indexesY (pattern) will come in validated gzip format and compression will not be needed for them
-    // they will be saved into the database as they are, in gzip format in order to save space and CPU
     public class GZipCompressor : ICompressor
     {
         private readonly JsonSerializerOptions serializerOptions;
@@ -16,7 +14,7 @@ namespace Persistence.Compression
             serializerOptions = JsonSerializerOptions.Web;
         }
 
-        public async Task<CrosslyDataModel?> TryDecompressToDataModel(Stream dataModelStream)
+        public async Task<CrosslyDataModel?> DecompressToDataModel(Stream dataModelStream)
         {
             using var gzipStream = new GZipStream(dataModelStream, CompressionMode.Decompress);
 

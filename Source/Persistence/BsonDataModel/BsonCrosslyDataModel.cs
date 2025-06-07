@@ -3,6 +3,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Persistence.Persistence.BsonDataModel
 {
+    // TODO: id and name must not be null!!!
+
     public class BsonCrosslyDataModel
     {
         [BsonId]
@@ -11,6 +13,9 @@ namespace Persistence.Persistence.BsonDataModel
 
         [BsonElement("name")]
         public string Name { get; set; } = null!;
+
+        [BsonElement("version")]
+        public string Version { get; set; } = null!;
 
         [BsonElement("fabric")]
         public BsonFabricDataModel Fabric { get; set; } = null!;
